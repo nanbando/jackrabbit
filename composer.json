@@ -3,10 +3,16 @@
     "description": "Nanando-Plugin to backup jackrabbit databases",
     "type": "plugin",
     "require": {
+        "jackalope/jackalope-jackrabbit": "^1.2"
     },
     "require-dev": {
         "nanbando/core": "dev-master",
         "phpunit/phpunit": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nanbando\\Plugin\\Jackrabbit\\": "src/"
+        }
     },
     "license": "MIT",
     "authors": [
