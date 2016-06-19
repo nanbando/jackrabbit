@@ -7,7 +7,7 @@ use League\Flysystem\Filesystem;
 use Nanbando\Core\Database\Database;
 use Nanbando\Core\Database\ReadonlyDatabase;
 use Nanbando\Core\Plugin\PluginInterface;
-use Nanbando\Core\Temporary\TemporaryFileManager;
+use Neutron\TemporaryFilesystem\TemporaryFilesystemInterface;
 use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
@@ -23,17 +23,18 @@ class JackrabbitPlugin implements PluginInterface
     private $output;
 
     /**
-     * @var TemporaryFileManager
+     * @var TemporaryFilesystemInterface
      */
-    private $temporaryFileManager;
+    private $temporaryFileSystem;
 
     /**
      * @param OutputInterface $output
+     * @param TemporaryFilesystemInterface $temporaryFileSystem
      */
-    public function __construct(OutputInterface $output, TemporaryFileManager $temporaryFileManager)
+    public function __construct(OutputInterface $output, TemporaryFilesystemInterface $temporaryFileSystem)
     {
         $this->output = $output;
-        $this->temporaryFileManager = $temporaryFileManager;
+        $this->temporaryFileSystem = $temporaryFileSystem;
     }
 
     /**
@@ -67,7 +68,7 @@ class JackrabbitPlugin implements PluginInterface
     {
         $this->output->writeln('  * <comment>export "' . $parameter['path'] . '" to "export.xml"</comment>');
 
-        $tempfile = $this->temporaryFileManager->getFilename('jackrabbit');
+        $tempfile = $this->temporaryFileSystem->createTemporaryFile('jackrabbit');
         $stream = fopen($tempfile, 'w+');
         $this->export($this->getSession($parameter), $parameter['path'], $stream);
         fclose($stream);
@@ -86,7 +87,7 @@ class JackrabbitPlugin implements PluginInterface
     ) {
         $this->output->writeln('  * <comment>import "export.xml" to "' . $parameter['path'] . '"</comment>');
 
-        $tempfile = $this->temporaryFileManager->getFilename('jackrabbit');
+        $tempfile = $this->temporaryFileSystem->createTemporaryFile('jackrabbit');
         $handle = fopen($tempfile, 'w+');
         file_put_contents($tempfile, $source->read('export.xml'));
         fclose($handle);
