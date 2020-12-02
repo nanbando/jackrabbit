@@ -18,7 +18,14 @@
     "authors": [
         {
             "name": "Johannes Wachter",
-            "email": "johannes.wachter@massiveart.at"
+            "email": "johannes@sulu.io"
         }
-    ]
+    ],
+    "extra": {
+        "nanbando": {
+            "bundle-classes": [
+                "Nanbando\\Plugin\\Jackrabbit\\NanbandoJackrabbitBundle"
+            ]
+        }
+    }
 }
