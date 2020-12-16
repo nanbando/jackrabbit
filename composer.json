@@ -6,8 +6,9 @@
         "jackalope/jackalope-jackrabbit": "^1.2"
     },
     "require-dev": {
+        "dflydev/embedded-composer": "@dev",
         "nanbando/core": "^0.1|dev-master",
-        "phpunit/phpunit": "^5.3"
+        "phpunit/phpunit": "^6.0"
     },
     "autoload": {
         "psr-4": {
