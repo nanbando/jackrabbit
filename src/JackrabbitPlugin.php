@@ -104,12 +104,27 @@ class JackrabbitPlugin implements PluginInterface
      */
     private function export(SessionInterface $session, $path, $stream)
     {
+        $memoryStream = \fopen('php://memory', 'w+');
         $session->exportSystemView(
             $path,
-            $stream,
+            $memoryStream,
             true,
             false
         );
+
+        \rewind($memoryStream);
+        $content = \stream_get_contents($memoryStream);
+
+        $document = new \DOMDocument();
+        $document->loadXML($content);
+        $xpath = new \DOMXPath($document);
+        $xpath->registerNamespace('sv', 'http://www.jcp.org/jcr/sv/1.0');
+
+        foreach ($xpath->query('//sv:property[@sv:name="sulu:versions" or @sv:name="jcr:versionHistory" or @sv:name="jcr:baseVersion" or @sv:name="jcr:predecessors" or @sv:name="jcr:isCheckedOut"]') as $element) {
+            $element->parentNode->removeChild($element);
+        }
+
+        \fwrite($stream, $document->saveXML());
     }
 
     /**
