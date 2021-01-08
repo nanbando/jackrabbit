@@ -71,7 +71,6 @@ class JackrabbitPlugin implements PluginInterface
         $tempfile = $this->temporaryFileSystem->createTemporaryFile('jackrabbit');
         $stream = fopen($tempfile, 'w+');
         $this->export($this->getSession($parameter), $parameter['path'], $stream);
-        fclose($stream);
 
         $destination->writeStream('export.xml', fopen($tempfile, 'r'));
     }
@@ -90,7 +89,6 @@ class JackrabbitPlugin implements PluginInterface
         $tempfile = $this->temporaryFileSystem->createTemporaryFile('jackrabbit');
         $handle = fopen($tempfile, 'w+');
         file_put_contents($tempfile, $source->read('export.xml'));
-        fclose($handle);
 
         $this->import($this->getSession($parameter), $parameter['path'], $tempfile);
     }
